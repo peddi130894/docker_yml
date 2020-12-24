@@ -1,0 +1,38 @@
+---
+- name: installing docker on all servers
+  hosts: all
+  become: true
+  tasks:
+   - name: install required system packages
+     apt:
+	  name: 'curl'
+	  state: latest
+	 
+   - name: add docker GPG apt key
+     apt_key: 
+	  url: https://download.docker.com/linux/ubuntu/gpg
+	  state: present
+	  
+   - name: add docker repository
+     apt_repository:
+	  repo: deb https://download.docker.com/linux/ubuntu bionic stable
+	  state: present
+	  
+   - name: update apt and install docker
+      apt:
+	  name: docker
+	  state: latest
+	  update_cache=yes
+	 
+   - name: install docker module for python
+     pip:
+	  name: docker
+	  state: latest
+	  
+   - name: pull image from docker hub
+     docker_image:
+	  name: centos
+	  source: pull
+	  
+...
+	  
